@@ -1,4 +1,5 @@
 <?php
+include_once './SampleApp.php';
 /**
  * 料金計算処理の呼び出し
  * 
@@ -56,5 +57,8 @@
  * ※登録内容を破棄して最初からやり直す場合は「最初からやり直す」を入力してください。
  */
 
- $TicketType = $argv[1] ?? null;
-echo $TicketType . "\n";
+// アプリケーション本体の「インスタンス」を生成
+$app = new SampleApp();
+
+// アプリケーション実行
+$app->execute();
