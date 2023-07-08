@@ -3,7 +3,7 @@
  * アプリケーションのベースとなる「抽象クラス」
  * メッセージ表示・入力受付などの基本的なメソッドが用意されています。
  */
-abstract class App
+abstract class CliApp
 {
     /**
      * アプリケーション実行メソッド
@@ -11,7 +11,7 @@ abstract class App
      *
      * @return void
      */
-    abstract public function execute();
+    abstract public function listen();
 
 
     /*
@@ -23,18 +23,15 @@ abstract class App
 
     /**
      * 画面に文字を表示：末尾に改行なし
-     *
      * @param string $message
      */
     protected function message(string $message)
     {
-        // 危険な文字はエスケープする（HTMLエスケープのシェル版みたいなもの）
         echo escapeshellcmd($message);
     }
 
     /**
      * 画面に文字を表示：末尾に改行あり
-     *
      * @param string $message
      */
     protected function line(string $message)
@@ -56,4 +53,31 @@ abstract class App
         return trim(fgets(STDIN));
     }
 
+    /**
+     * 不正な値が入力されたときにエラーメッセージを返す
+     * 
+     * @param string $errorMessage
+     * @return array{result:false,error:string}
+     */
+    protected function inputError(string $errorMessage)
+    {
+        return [
+            'result' => false,
+            'error' => $errorMessage
+        ];
+    }
+
+    /**
+     * 適切な値が入力されたときに値を返す
+     * 
+     * @param int $input
+     * @return array{result:int,error:string}
+     */
+    protected function inputSuccess(int $input)
+    {
+        return [
+            'result' => $input,
+            'error' => ''
+        ];
+    }
 }

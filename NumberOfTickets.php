@@ -1,0 +1,51 @@
+<?php
+include_once './CliApp.php';
+
+/**
+ * アプリケーション本体
+ *
+ * Appクラスを「継承」して、アプリケーションに必要なロジックをここに記述します。
+ */
+class NumberOfTickets extends CliApp
+{
+    public int $number;
+
+    /**
+     * アプリケーション実行メソッド
+     * アプリケーション独自の処理を記述する
+     *
+     * @return void
+     */
+    public function listen()
+    {
+        [
+            'result' => $result,
+            'error' => $error
+        ] = $this->validate();
+
+        if ($result === false) {
+            $this->line($error);
+            $this->listen(); // もう一度
+        } else {
+            $this->number = $result;
+        }
+    }
+
+    /**
+     * チケットの枚数
+     * 不正な値の場合は、エラーメッセージを返します。
+     * @return array{result:false|int,error:string}
+     */
+    private function validate()
+    {
+        $input = $this->ask('チケットの枚数を半角数字で入力してください: 例「3」');
+        if (!is_numeric($input)) {
+            return $this->inputError('半角数字で入力してください。');
+        }
+        $value = intval($input);
+        if ($value < 1 || 1000 < $value) {
+            return $this->inputError('1から1000までの半角数字で入力してください。');
+        }
+        return $this->inputSuccess($value);
+    }
+}
