@@ -38,7 +38,7 @@ class NumberOfTickets extends CliApp
      */
     private function validate()
     {
-        $input = $this->ask('チケットの枚数を半角数字で入力してください: 例「3」');
+        $input = $this->ask('チケットの枚数を半角数字で入力してください : ');
         if (!is_numeric($input)) {
             return $this->inputError('半角数字で入力してください。');
         }

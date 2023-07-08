@@ -1,5 +1,8 @@
 <?php
 include_once './CliApp.php';
+include_once './TicketType.php';
+include_once './AgeCategory.php';
+include_once './NumberOfTickets.php';
 
 /**
  * アプリケーション本体
@@ -14,7 +17,7 @@ class Ticket extends CliApp
 
     private $number;
 
-    private array $detail = [];
+    private array $detail;
 
     /**
      * チケットの登録：必要な情報を入力してもらう
@@ -34,6 +37,7 @@ class Ticket extends CliApp
         
         $ticket->add($ticketType, $ageCategory, $numberOfTickets);
         $ticket->confirm();
+        $this->line('');
         $ticket->listen();
     }
 
@@ -52,7 +56,7 @@ class Ticket extends CliApp
             $this->register($this);
         }
         if ($result === 2) {
-            // 次へ
+            return;
         }
     }
 
@@ -71,20 +75,27 @@ class Ticket extends CliApp
 
     public function confirm()
     {
+        $list = $this->confirmMessageList();
+        array_map(fn($m) => $this->line($m), $list);
+    }
+
+    private function confirmMessageList(): array
+    {
+        $list = [];
         if (empty($this->detail)) {
-            $this->line('現在、登録されているチケットはありません。');
-            return;
+            $list[] = '現在、登録されているチケットはありません。';
+            $list[] = '';
+            return $list;
         }
-        $this->line('現在、以下の内容が登録されています。');
-        $this->line('');
+        $list[] = '';
+        $list[] = '現在、以下の内容が登録されています。';
+        $list[] = '';
         foreach($this->detail as $type => $arr) {
             foreach ($arr as $category => $number) {
-                $this->line(
-                    "{$type}チケット: {$category} {$number}枚"
-                );
+                $list[] = "{$type}チケット: {$category} {$number}枚";
             }
         }
-        $this->line('');
+        return $list;
     }
 
     /**
@@ -94,7 +105,7 @@ class Ticket extends CliApp
      */
     private function validate()
     {
-        $input = $this->ask('ほかにチケットを登録しますか？ はい:「1」 いいえ:「2」');
+        $input = $this->ask('ほかにチケットを登録しますか？ はい「1」, いいえ「2」 : ');
         if (!is_numeric($input)) {
             return $this->inputError('半角数字で入力してください。');
         }

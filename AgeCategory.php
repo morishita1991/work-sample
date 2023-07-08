@@ -44,7 +44,7 @@ class AgeCategory extends CliApp
      */
     private function validate()
     {
-        $input = $this->ask('チケットの年齢区分を半角数字で入力してください。大人:「1」, 子供「2」, シニア「3」');
+        $input = $this->ask('チケットの年齢区分を半角数字で入力してください。大人「1」, 子供「2」, シニア「3」 : ');
         if (!is_numeric($input)) {
             return $this->inputError('半角数字で入力してください。');
         }

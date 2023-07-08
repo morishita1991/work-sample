@@ -43,7 +43,7 @@ class TicketType extends CliApp
      */
     private function validate()
     {
-        $input = $this->ask('チケットの種別を半角数字で入力してください。通常:「1」, 特別:「2」');
+        $input = $this->ask('チケットの種別を半角数字で入力してください。通常「1」, 特別「2」 : ');
         if (!is_numeric($input)) {
             return $this->inputError('半角数字で入力してください。');
         }
