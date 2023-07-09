@@ -55,15 +55,23 @@ include_once './ExtraCharge.php';
  * ※登録内容を破棄して最初からやり直す場合は「最初からやり直す」を入力してください。
  */
 
-$ticket = new Ticket();
-$ticket->register($ticket);
+(new Casher)->Execute();
 
-$discount = new Discount();
-$discount->listen();
-
-$extraCharge = new ExtraCharge();
-$extraCharge->listen();
-
-$ticket->confirm();
-$discount->confirm();
-$extraCharge->confirm();
+class Casher
+{
+    public function Execute()
+    {
+        $ticket = new Ticket();
+        $ticket->register($ticket);
+        
+        $discount = new Discount();
+        $discount->listen();
+        
+        $extraCharge = new ExtraCharge();
+        $extraCharge->listen();
+        
+        $ticket->confirm();
+        $discount->confirm();
+        $extraCharge->confirm();
+    }
+}

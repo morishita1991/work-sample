@@ -10,7 +10,7 @@ class AgeCategory extends CliApp
 {
     public string $category;
 
-    const CATEGORY_LIST = [
+    public const CATEGORY_LIST = [
         1 => '大人',
         2 => '子供',
         3 => 'シニア',
@@ -33,7 +33,7 @@ class AgeCategory extends CliApp
             $this->line($error);
             $this->listen(); // もう一度
         } else {
-            $this->category = self::CATEGORY_LIST[$result];
+            $this->category = $result;
         }
     }
 

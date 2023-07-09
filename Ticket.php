@@ -1,14 +1,9 @@
 <?php
 include_once './CliApp.php';
-include_once './TicketType.php';
+include_once './TicketType/TicketType.php';
 include_once './AgeCategory.php';
 include_once './NumberOfTickets.php';
 
-/**
- * アプリケーション本体
- *
- * Appクラスを「継承」して、アプリケーションに必要なロジックをここに記述します。
- */
 class Ticket extends CliApp
 {
     private $type;
@@ -31,7 +26,7 @@ class Ticket extends CliApp
         
         $ageCategory = new AgeCategory();
         $ageCategory->listen();
-        
+
         $numberOfTickets = new NumberOfTickets();
         $numberOfTickets->listen();
         
@@ -57,6 +52,10 @@ class Ticket extends CliApp
         }
         if ($result === 2) {
             return;
+        }
+        if ($result === 3) {
+            // 最初から
+            (new Casher)->Execute();
         }
     }
 
@@ -92,7 +91,9 @@ class Ticket extends CliApp
         $list[] = '';
         foreach($this->detail as $type => $arr) {
             foreach ($arr as $category => $number) {
-                $list[] = "{$type}チケット: {$category} {$number}枚";
+                $typeName = TicketType::LIST[$type];
+                $categoryName = AgeCategory::CATEGORY_LIST[$category];
+                $list[] = "{$typeName}チケット: {$categoryName} {$number}枚";
             }
         }
         return $list;
@@ -105,12 +106,13 @@ class Ticket extends CliApp
      */
     private function validate()
     {
-        $input = $this->ask('ほかにチケットを登録しますか？ はい「1」, いいえ「2」 : ');
+        $input = $this->ask('ほかにチケットを登録しますか？ はい「1」, いいえ「2」, 最初からやり直す「3」 : ');
+        $this->line('');
         if (!is_numeric($input)) {
             return $this->inputError('半角数字で入力してください。');
         }
         $value = intval($input);
-        if (!in_array($value, [1, 2], true)) {
+        if (!in_array($value, [1, 2, 3], true)) {
             return $this->inputError('指定外の数字は入力しないでください。');
         }
         return $this->inputSuccess($value);

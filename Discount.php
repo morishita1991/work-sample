@@ -85,7 +85,7 @@ class Discount extends CliApp
     private function validate()
     {
         $this->line('');
-        $this->line('割引方法を入力してください。※次へ進む場合は「0」');
+        $this->line('割引方法を入力してください。');
         $input = $this->ask($this->askMassage());
         $this->line('');
         if (!is_numeric($input)) {
@@ -100,7 +100,7 @@ class Discount extends CliApp
 
     private function askMassage()
     {
-        $askList = [];
+        $askList = ['次へ進む「0」'];
         foreach (self::TYPE_LIST as $key => $val) {
             if (!in_array($key, array_keys($this->detail), true)) {
                 $askList[] = $val . '「' . strval($key) . '」';

@@ -1,11 +1,7 @@
 <?php
 include_once './CliApp.php';
 
-/**
- * アプリケーション本体
- *
- * Appクラスを「継承」して、アプリケーションに必要なロジックをここに記述します。
- */
+
 class NumberOfTickets extends CliApp
 {
     public int $number;

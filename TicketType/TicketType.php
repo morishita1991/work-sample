@@ -1,18 +1,16 @@
 <?php
 include_once './CliApp.php';
+include_once 'Normal.php';
+include_once 'Special.php';
 
-/**
- * アプリケーション本体
- *
- * Appクラスを「継承」して、アプリケーションに必要なロジックをここに記述します。
- */
+
 class TicketType extends CliApp
 {
-    public string $type;
+    public int $type;
 
-    const TYPE_LIST = [
-        1 => '通常',
-        2 => '特別',
+    public const LIST = [
+        Normal::TYPE => Normal::LABEL,
+        Special::TYPE => Special::LABEL,
     ];
 
     /**
@@ -32,7 +30,7 @@ class TicketType extends CliApp
             $this->line($error);
             $this->listen(); // もう一度
         } else {
-            $this->type = self::TYPE_LIST[$result];
+            $this->type = $result;
         }
     }
 
@@ -43,7 +41,11 @@ class TicketType extends CliApp
      */
     private function validate()
     {
-        $input = $this->ask('チケットの種別を半角数字で入力してください。通常「1」, 特別「2」 : ');
+        $labelList = [];
+        foreach(self::LIST as $key => $label) {
+            $labelList[] = $label . '「' . strval($key) . '」';
+        }
+        $input = $this->ask('チケットの種別を半角数字で入力してください。' . implode(', ', $labelList) . ' : ');
         if (!is_numeric($input)) {
             return $this->inputError('半角数字で入力してください。');
         }
