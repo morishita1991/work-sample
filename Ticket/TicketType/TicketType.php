@@ -9,16 +9,10 @@ class TicketType extends CliApp
     public int $type;
 
     public const LIST = [
-        Normal::TYPE => Normal::LABEL,
-        Special::TYPE => Special::LABEL,
+        Normal::KEY => Normal::LABEL,
+        Special::KEY => Special::LABEL,
     ];
 
-    /**
-     * アプリケーション実行メソッド
-     * アプリケーション独自の処理を記述する
-     *
-     * @return void
-     */
     public function listen()
     {
         [

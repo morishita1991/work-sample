@@ -2,16 +2,10 @@
 include_once './CliApp.php';
 
 
-class NumberOfTickets extends CliApp
+class Quantity extends CliApp
 {
     public int $number;
 
-    /**
-     * アプリケーション実行メソッド
-     * アプリケーション独自の処理を記述する
-     *
-     * @return void
-     */
     public function listen()
     {
         [

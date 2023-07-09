@@ -1,5 +1,9 @@
 <?php
 include_once './CliApp.php';
+include_once 'Adult.php';
+include_once 'Child.php';
+include_once 'Senior.php';
+
 
 /**
  * アプリケーション本体
@@ -10,18 +14,12 @@ class AgeCategory extends CliApp
 {
     public string $category;
 
-    public const CATEGORY_LIST = [
-        1 => '大人',
-        2 => '子供',
-        3 => 'シニア',
+    public const LIST = [
+        Adult::KEY => Adult::LABEL,
+        Child::KEY => Child::LABEL,
+        Senior::KEY => Senior::LABEL,
     ];
 
-    /**
-     * アプリケーション実行メソッド
-     * アプリケーション独自の処理を記述する
-     *
-     * @return void
-     */
     public function listen()
     {
         [

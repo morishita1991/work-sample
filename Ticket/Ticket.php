@@ -1,8 +1,8 @@
 <?php
 include_once './CliApp.php';
-include_once './TicketType/TicketType.php';
-include_once './AgeCategory.php';
-include_once './NumberOfTickets.php';
+include_once 'TicketType/TicketType.php';
+include_once 'AgeCategory/AgeCategory.php';
+include_once 'Quantity.php';
 
 class Ticket extends CliApp
 {
@@ -10,7 +10,7 @@ class Ticket extends CliApp
 
     private $category;
 
-    private $number;
+    private $quantity;
 
     private array $detail;
 
@@ -27,10 +27,10 @@ class Ticket extends CliApp
         $ageCategory = new AgeCategory();
         $ageCategory->listen();
 
-        $numberOfTickets = new NumberOfTickets();
-        $numberOfTickets->listen();
+        $quantity = new Quantity();
+        $quantity->listen();
         
-        $ticket->add($ticketType, $ageCategory, $numberOfTickets);
+        $ticket->add($ticketType, $ageCategory, $quantity);
         $ticket->confirm();
         $this->line('');
         $ticket->listen();
@@ -62,14 +62,14 @@ class Ticket extends CliApp
     public function add(
         TicketType $ticketType,
         AgeCategory $ageCategory,
-        NumberOfTickets $numberOfTickets
+        Quantity $quantity
     ) {
         $this->type = $ticketType->type;
         $this->category = $ageCategory->category;
-        $this->number = $numberOfTickets->number;
+        $this->quantity = $quantity->number;
 
         $this->detail[$this->type][$this->category] ??= 0;
-        $this->detail[$this->type][$this->category] += $this->number;
+        $this->detail[$this->type][$this->category] += $this->quantity;
     }
 
     public function confirm()
@@ -92,7 +92,7 @@ class Ticket extends CliApp
         foreach($this->detail as $type => $arr) {
             foreach ($arr as $category => $number) {
                 $typeName = TicketType::LIST[$type];
-                $categoryName = AgeCategory::CATEGORY_LIST[$category];
+                $categoryName = AgeCategory::LIST[$category];
                 $list[] = "{$typeName}チケット: {$categoryName} {$number}枚";
             }
         }

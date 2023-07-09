@@ -2,6 +2,6 @@
 
 class Special extends TicketType
 {
-    const TYPE = 2;
+    const KEY = 2;
     const LABEL = '特別';
 }

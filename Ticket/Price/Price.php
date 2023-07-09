@@ -1,49 +1,25 @@
 <?php
 
-class UnitPrice {
+class Price {
     private const UNIT_PRICE = [
-        [
-            // 通常
-            'ticketType' => 1,
-            'unitPrice' => [
-                [
-                    // 大人
-                    'ageCategory' => 1,
-                    'unitPrice' => 1000
-                ],
-                [
-                    // 子供
-                    'ageCategory' => 2,
-                    'unitPrice' => 500
-                ],
-                [
-                    // シニア
-                    'ageCategory' => 3,
-                    'unitPrice' => 800
-                ],
-            ]
+        // 通常
+        Normal::KEY => [
+            // 大人
+            Adult::KEY => 1000,
+            // 子供
+            Child::KEY => 500,
+            // シニア
+            Senior::KEY => 800
         ],
-        [
-            // 特別
-            'ticketType' => 2,
-            'unitPrice' => [
-                [
-                    // 大人
-                    'ageCategory' => 1,
-                    'unitPrice' => 600
-                ],
-                [
-                    // 子供
-                    'ageCategory' => 2,
-                    'unitPrice' => 400
-                ],
-                [
-                    // シニア
-                    'ageCategory' => 3,
-                    'unitPrice' => 500
-                ],
-            ]
-        ],
+        // 特別
+        Special::KEY => [
+            // 大人
+            Adult::KEY => 600,
+            // 子供
+            Child::KEY => 400,
+            // シニア
+            Senior::KEY => 500
+        ]
     ];
 
     public function __construct()
@@ -54,7 +30,7 @@ class UnitPrice {
     private function setUnitPrice()
     {
         $typeList = TicketType::LIST;
-        $ageCategoryList = AgeCategory::CATEGORY_LIST;
+        $ageCategoryList = AgeCategory::LIST;
         $unitPriceList = [];
         foreach ($typeList as $type) {
             switch($type) {
