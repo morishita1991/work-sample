@@ -12,7 +12,7 @@ class Ticket extends CliApp
 
     private $quantity;
 
-    private array $detail;
+    public array $detail;
 
     /**
      * チケットの登録：必要な情報を入力してもらう
@@ -66,7 +66,7 @@ class Ticket extends CliApp
     ) {
         $this->type = $ticketType->type;
         $this->category = $ageCategory->category;
-        $this->quantity = $quantity->number;
+        $this->quantity = $quantity->quantity;
 
         $this->detail[$this->type][$this->category] ??= 0;
         $this->detail[$this->type][$this->category] += $this->quantity;

@@ -1,10 +1,9 @@
 <?php
 include_once './CliApp.php';
 
-
 class Quantity extends CliApp
 {
-    public int $number;
+    public int $quantity;
 
     public function listen()
     {
@@ -17,7 +16,7 @@ class Quantity extends CliApp
             $this->line($error);
             $this->listen(); // もう一度
         } else {
-            $this->number = $result;
+            $this->quantity = $result;
         }
     }
 

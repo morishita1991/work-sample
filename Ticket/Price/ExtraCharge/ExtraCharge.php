@@ -1,16 +1,16 @@
 <?php
 include_once './CliApp.php';
-
+include_once 'HolidayCharge.php';
 
 class ExtraCharge extends CliApp
 {
     public string $type;
 
-    const TYPE_LIST = [
-        1 => '休日料金',
+    const LIST = [
+        HolidayCharge::KEY => HolidayCharge::LABEL,
     ];
 
-    private array $detail = [];
+    public array $detail = [];
 
     public function listen()
     {
@@ -27,12 +27,12 @@ class ExtraCharge extends CliApp
         if ($result === 0) {
             return;
         }
-        $this->line(self::TYPE_LIST[$result] . 'を適用しました。');
+        $this->line(self::LIST[$result] . 'を適用しました。');
         $this->line('');
 
         // 適用した割引
         $this->detail[$result] = 1;
-        if (count($this->detail) === count(self::TYPE_LIST)) {
+        if (count($this->detail) === count(self::LIST)) {
             return;
         }
         $this->listenMore();
@@ -46,7 +46,7 @@ class ExtraCharge extends CliApp
         }
         $discountList = [];
         foreach(array_keys($this->detail) as $type) {
-            $discountList[] = '「' . self::TYPE_LIST[$type] . '」';
+            $discountList[] = '「' . self::LIST[$type] . '」';
         }
         $line = 'なし';
         if (!empty($discountList)) {
@@ -90,7 +90,7 @@ class ExtraCharge extends CliApp
             return $this->inputError('半角数字で入力してください。');
         }
         $value = intval($input);
-        if (!in_array($value, array_merge(array_keys(self::TYPE_LIST), [0]), true)) {
+        if (!in_array($value, array_merge(array_keys(self::LIST), [0]), true)) {
             return $this->inputError('指定外の数字は入力しないでください。');
         }
         return $this->inputSuccess($value);
@@ -99,7 +99,7 @@ class ExtraCharge extends CliApp
     private function askMassage()
     {
         $askList = ['次へ進む「0」'];
-        foreach (self::TYPE_LIST as $key => $val) {
+        foreach (self::LIST as $key => $val) {
             if (!in_array($key, array_keys($this->detail), true)) {
                 $askList[] = $val . '「' . strval($key) . '」';
             }
