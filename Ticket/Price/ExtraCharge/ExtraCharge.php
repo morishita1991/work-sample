@@ -55,6 +55,19 @@ class ExtraCharge extends CliApp
         $this->line('割増対象: ' . $line);
     }
 
+    /**
+     * 割増合計金額を返す
+     * @return int
+     */
+    public function extraChargeAmount(): int
+    {
+        $amount = 0; // 割増合計
+        if ((new HolidayCharge($this))->applicable()) {
+            $amount += HolidayCharge::CHARGE_VALUE;
+        }
+        return $amount;
+    }
+
     private function listenMore()
     {
         [

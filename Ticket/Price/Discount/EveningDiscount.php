@@ -16,13 +16,13 @@ class EveningDiscount extends Discount
     }
 
     /**
-     * 割引を適用するかどうかを返す
+     * 割引の適用可否を返す
      * @return bool
      */
     public function applicable(): bool
     {
         // 夕方17時以降かどうか(時刻判定は行っていない)
         $isEvening = true;
-        return $isEvening && $this->discountDetail[self::KEY] === 1;
+        return $isEvening && ($this->discountDetail[self::KEY] ?? 0) === 1;
     }
 }

@@ -15,13 +15,13 @@ class HolidayCharge extends ExtraCharge
     }
 
     /**
-     * 割増を適用するかどうかを返す
+     * 割増の適用可否を返す
      * @return bool
      */
     public function applicable(): bool
     {
         // 休日かどうか（ここでは判定していない）
         $isHoliday = true;
-        return $isHoliday && $this->ExtraChargeDetail[self::KEY] === 1;
+        return $isHoliday && ($this->ExtraChargeDetail[self::KEY] ?? 0) === 1;
     }
 }

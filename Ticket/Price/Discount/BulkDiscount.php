@@ -9,21 +9,27 @@ class BulkDiscount extends Discount
     const DISCOUNT_VALUE = 0;
 
     private array $discountDetail;
-    private int $quantity;
+    private array $ticketDetail;
 
-    public function __construct(Discount $discount, Quantity $quantity)
+    public function __construct(Discount $discount, Ticket $ticket)
     {
         $this->discountDetail = $discount->detail;
-        $this->quantity = $quantity->quantity;
+        $this->ticketDetail = $ticket->detail;
     }
 
     /**
-     * 割引を適用するかどうかを返す
+     * 割引の適用可否を返す
      * @return bool
      */
     public function applicable(): bool
     {
         // 10人以上かどうか
-        return $this->quantity >= 10 && $this->discountDetail[self::KEY] === 1;
+        $number = 0;
+        foreach ($this->ticketDetail as $arr) {
+            foreach ($arr as $key => $quantity) {
+                $number += $quantity;
+            }
+        }
+        return $number >= 10 && ($this->discountDetail[self::KEY] ?? 0) === 1;
     }
 }

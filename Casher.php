@@ -73,5 +73,9 @@ class Casher
         $ticket->confirm();
         $discount->confirm();
         $extraCharge->confirm();
+
+        $price = new Price($ticket, $discount, $extraCharge);
+        $price->Calculate();
+        $price->listen();
     }
 }

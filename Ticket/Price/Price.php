@@ -33,9 +33,13 @@ class Price extends CliApp {
     // 販売合計金額
     private int $TotalAmount = 0;
 
-    private array $ticketDetail;
-    private array $discountDetail;
-    private array $extraChargeDetail;
+    private int $DiscountAmount = 0;
+
+    private int $ExtraChargeAmount = 0;
+
+    private Ticket $ticket;
+    private Discount $discount;
+    private ExtraCharge $extraCharge;
 
     public function __construct(
         Ticket $ticket,
@@ -43,33 +47,73 @@ class Price extends CliApp {
         ExtraCharge $extraCharge,
     )
     {
-        $this->ticketDetail = $ticket->detail;
-        $this->discountDetail = $discount->detail;
-        $this->extraChargeDetail = $extraCharge->detail;
-        $this->Calculate();
+        $this->ticket = $ticket;
+        $this->discount = $discount;
+        $this->extraCharge = $extraCharge;
     }
 
     public function listen()
     {
+        [
+            'result' => $result,
+            'error' => $error
+        ] = $this->validate();
+
+        if ($result === false) {
+            $this->line($error);
+            $this->listen();
+        }
+        if ($result === 1) {
+            $this->line('決済が完了しました。');
+            return;
+        }
+        if ($result === 2) {
+            // 最初から
+            (new Casher)->Execute();
+        }
     }
 
-    public function confirm()
-    {
-        $this->line('割引対象: ' . number_format($this->PreTotalAmount) . '円');
-        $this->line('');
-    }
-
-    private function Calculate()
+    public function Calculate()
     {
         // 金額変更前合計金額
         $this->calcPreTotalAmount();
+        $this->line('');
+        $this->line('変更前合計金額: ' . number_format($this->PreTotalAmount) . '円');
+        $this->line('');
         // 合計販売金額
         $this->calcTotalAmount();
+        $this->line('金額変更明細 -------');
+        $mark1 = $this->DiscountAmount !== 0 ? '-' : '';
+        $mark2 = $this->ExtraChargeAmount !== 0 ? '+' : '';
+        $this->line('    割引合計: ' . $mark1 . number_format($this->DiscountAmount) . '円');
+        $this->line('    割増合計: ' . $mark2 . number_format($this->ExtraChargeAmount) . '円');
+        $this->line('--------------------');
+        $this->line('販売合計金額: ' . number_format($this->TotalAmount) . '円');
+        $this->line('');
+    }
+
+    /**
+     * 請求内容の確認
+     * 不正な値の場合は、エラーメッセージを返します。
+     * @return array{result:false|int,error:string}
+     */
+    private function validate()
+    {
+        $input = $this->ask('上記の内容で請求を確定します。よろしいですか？ はい「1」, 最初からやり直す「2」 : ');
+        $this->line('');
+        if (!is_numeric($input)) {
+            return $this->inputError('半角数字で入力してください。');
+        }
+        $value = intval($input);
+        if (!in_array($value, [1, 2], true)) {
+            return $this->inputError('指定外の数字は入力しないでください。');
+        }
+        return $this->inputSuccess($value);
     }
 
     private function calcPreTotalAmount()
     {
-        foreach($this->ticketDetail as $type => $arr) {
+        foreach($this->ticket->detail as $type => $arr) {
             foreach ($arr as $category => $quantity) {
                 $this->PreTotalAmount += self::UNIT_PRICE[$type][$category] * $quantity;
             }
@@ -78,34 +122,9 @@ class Price extends CliApp {
 
     private function calcTotalAmount()
     {
-        return $this->PreTotalAmount + $this->getOptionalCharge();
-    }
-
-    private function getOptionalCharge()
-    {
-        // TODO: getDiscountの戻り値は負の値
-        return $this->getExtraCharge() + $this->getDiscount();
-    }
-
-    private function getDiscount()
-    {
-        return [
-            // ドメインを吸収
-            'bulk' => $this->getBulkDiscount(),
-            'evening' => $this->getEveningDiscount(),
-        ][$this->Discount];
-    }
-
-    private function getBulkDiscount()
-    {
-        // 10人以上だと10%割引(子供は0.5人換算とする)
-        $discountRate = 0.1;
-        return $this->PreTotalAmount * $discountRate * (-1);
-    }
-
-    private function getEveningDiscount()
-    {
-
+        $this->DiscountAmount = $this->discount->discountAmount($this->ticket, $this);
+        $this->ExtraChargeAmount = $this->extraCharge->extraChargeAmount();
+        $this->TotalAmount = $this->PreTotalAmount - $this->DiscountAmount + $this->ExtraChargeAmount;
     }
 }
 

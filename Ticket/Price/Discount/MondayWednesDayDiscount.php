@@ -16,13 +16,13 @@ class MondayWednesDayDiscount extends Discount
     }
 
     /**
-     * 割引を適用するかどうかを返す
+     * 割引の適用可否を返す
      * @return bool
      */
     public function applicable(): bool
     {
         // ⽉曜または⽔曜かどうか(曜日判定は行っていない)
         $isMondayOrWednesDay = true;
-        return $isMondayOrWednesDay && $this->discountDetail[self::KEY] === 1;
+        return $isMondayOrWednesDay && ($this->discountDetail[self::KEY] ?? 0) === 1;
     }
 }

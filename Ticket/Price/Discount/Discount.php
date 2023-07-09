@@ -1,5 +1,6 @@
 <?php
 include_once './CliApp.php';
+include_once './Ticket/Price/Price.php';
 include_once 'BulkDiscount.php';
 include_once 'EveningDiscount.php';
 include_once 'MondayWednesDayDiscount.php';
@@ -15,6 +16,8 @@ class Discount extends CliApp
     ];
 
     public array $detail = [];
+
+    private int $amount;
 
     public function listen()
     {
@@ -57,6 +60,27 @@ class Discount extends CliApp
             $line = implode(',', $discountList);
         }
         $this->line('割引対象: ' . $line);
+    }
+
+    /**
+     * 割引合計金額を返す
+     * @param Ticket $ticket
+     * @param Price $price
+     * @return int
+     */
+    public function discountAmount(Ticket $ticket, Price $price): int
+    {
+        $amount = 0; // 割引合計
+        if ((new BulkDiscount($this, $ticket))->applicable()) {
+            $amount += intval($price->PreTotalAmount * BulkDiscount::DISCOUNT_RATE / 100);
+        }
+        if ((new EveningDiscount($this))->applicable()) {
+            $amount += EveningDiscount::DISCOUNT_VALUE;
+        }
+        if ((new MondayWednesDayDiscount($this))->applicable()) {
+            $amount += EveningDiscount::DISCOUNT_VALUE;
+        }
+        return $amount;
     }
 
     private function listenMore()
