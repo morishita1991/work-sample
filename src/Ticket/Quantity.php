@@ -1,5 +1,5 @@
 <?php
-include_once './CliApp.php';
+include_once './src/CliApp.php';
 
 class Quantity extends CliApp
 {

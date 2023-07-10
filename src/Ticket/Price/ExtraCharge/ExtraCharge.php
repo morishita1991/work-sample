@@ -1,28 +1,16 @@
 <?php
-include_once './CliApp.php';
-include_once './Ticket/Price/Price.php';
-include_once 'BulkDiscount.php';
-include_once 'EveningDiscount.php';
-include_once 'MondayWednesDayDiscount.php';
+include_once './src/CliApp.php';
+include_once 'HolidayCharge.php';
 
-class Discount extends CliApp
+class ExtraCharge extends CliApp
 {
     public string $type;
 
     const LIST = [
-        BulkDiscount::KEY => BulkDiscount::LABEL,
-        EveningDiscount::KEY => EveningDiscount::LABEL,
-        MondayWednesDayDiscount::KEY => MondayWednesDayDiscount::LABEL
+        HolidayCharge::KEY => HolidayCharge::LABEL,
     ];
 
-    private Ticket $ticket;
-
     public array $detail = [];
-
-    public function __construct(Ticket $ticket)
-    {
-        $this->ticket = $ticket;
-    }
 
     public function listen()
     {
@@ -53,7 +41,7 @@ class Discount extends CliApp
     public function confirm()
     {
         if (empty($this->detail)) {
-            $this->line('割引対象: なし');
+            $this->line('割増対象: なし');
             return;
         }
         $discountList = [];
@@ -64,26 +52,18 @@ class Discount extends CliApp
         if (!empty($discountList)) {
             $line = implode(',', $discountList);
         }
-        $this->line('割引対象: ' . $line);
+        $this->line('割増対象: ' . $line);
     }
 
     /**
-     * 割引合計金額を返す
-     * @param Ticket $ticket
-     * @param Price $price
+     * 割増合計金額を返す
      * @return int
      */
-    public function discountAmount(Ticket $ticket, Price $price): int
+    public function extraChargeAmount(): int
     {
-        $amount = 0; // 割引合計
-        if ((new BulkDiscount($this, $ticket))->applicable()) {
-            $amount += intval($price->PreTotalAmount * BulkDiscount::DISCOUNT_RATE / 100);
-        }
-        if ((new EveningDiscount($this))->applicable()) {
-            $amount += EveningDiscount::DISCOUNT_VALUE;
-        }
-        if ((new MondayWednesDayDiscount($this))->applicable()) {
-            $amount += EveningDiscount::DISCOUNT_VALUE;
+        $amount = 0; // 割増合計
+        if ((new HolidayCharge($this))->applicable()) {
+            $amount += HolidayCharge::CHARGE_VALUE;
         }
         return $amount;
     }
@@ -106,17 +86,17 @@ class Discount extends CliApp
         if ($result === 2) {
             return;
         }
-    }
+    } 
 
     /**
-     * 割引種別の入力
+     * 割増種別の入力
      * 不正な値の場合は、エラーメッセージを返します。
      * @return array{result:false|int,error:string}
      */
     private function validate()
     {
         $this->line('');
-        $this->line('割引方法を入力してください。');
+        $this->line('割増方法を入力してください。');
         $input = $this->ask($this->askMassage());
         $this->line('');
         if (!is_numeric($input)) {
@@ -125,9 +105,6 @@ class Discount extends CliApp
         $value = intval($input);
         if (!in_array($value, array_merge(array_keys(self::LIST), [0]), true)) {
             return $this->inputError('指定外の数字は入力しないでください。');
-        }
-        if ($value === BulkDiscount::KEY && !(new BulkDiscount($this, $this->ticket))->isOver10Tickets()) {
-            return $this->inputError('10人未満は「団体割引」を適用できません。');
         }
         return $this->inputSuccess($value);
     }
@@ -145,13 +122,13 @@ class Discount extends CliApp
     }
 
     /**
-     * 再び割引種別の入力を行うかどうか
+     * 再び割増種別の入力を行うかどうか
      * 不正な値の場合は、エラーメッセージを返します。
      * @return array{result:false|int,error:string}
      */
     private function validateMore()
     {
-        $input = $this->ask('他に割引は必要ですか？ はい「1」, いいえ「2」 : ');
+        $input = $this->ask('他に割増は必要ですか？ はい「1」, いいえ「2」 : ');
         $this->line('');
         if (!is_numeric($input)) {
             return $this->inputError('半角数字で入力してください。');

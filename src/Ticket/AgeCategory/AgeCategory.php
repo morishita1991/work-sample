@@ -1,16 +1,23 @@
 <?php
-include_once './CliApp.php';
-include_once 'NormalTicket.php';
-include_once 'SpecialTicket.php';
+include_once './src/CliApp.php';
+include_once 'Adult.php';
+include_once 'Child.php';
+include_once 'Senior.php';
 
 
-class TicketType extends CliApp
+/**
+ * アプリケーション本体
+ *
+ * Appクラスを「継承」して、アプリケーションに必要なロジックをここに記述します。
+ */
+class AgeCategory extends CliApp
 {
-    public int $type;
+    public string $category;
 
     public const LIST = [
-        NormalTicket::KEY => NormalTicket::LABEL,
-        SpecialTicket::KEY => SpecialTicket::LABEL,
+        Adult::KEY => Adult::LABEL,
+        Child::KEY => Child::LABEL,
+        Senior::KEY => Senior::LABEL,
     ];
 
     public function listen()
@@ -24,27 +31,23 @@ class TicketType extends CliApp
             $this->line($error);
             $this->listen(); // もう一度
         } else {
-            $this->type = $result;
+            $this->category = $result;
         }
     }
 
     /**
-     * チケットの種別
+     * 年齢区分
      * 不正な値の場合は、エラーメッセージを返します。
      * @return array{result:false|int,error:string}
      */
     private function validate()
     {
-        $labelList = [];
-        foreach(self::LIST as $key => $label) {
-            $labelList[] = $label . '「' . strval($key) . '」';
-        }
-        $input = $this->ask('チケットの種別を半角数字で入力してください。' . implode(', ', $labelList) . ' : ');
+        $input = $this->ask('チケットの年齢区分を半角数字で入力してください。大人「1」, 子供「2」, シニア「3」 : ');
         if (!is_numeric($input)) {
             return $this->inputError('半角数字で入力してください。');
         }
         $value = intval($input);
-        if (!in_array($value, [1, 2], true)) {
+        if (!in_array($value, [1, 2, 3], true)) {
             return $this->inputError('指定外の数字は入力しないでください。');
         }
         return $this->inputSuccess($value);

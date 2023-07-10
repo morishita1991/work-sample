@@ -1,6 +1,6 @@
 <?php
-include_once './CliApp.php';
-include_once './Ticket/Ticket.php';
+include_once './src/CliApp.php';
+include_once './src/Ticket/Ticket.php';
 include_once 'Discount/Discount.php';
 include_once 'ExtraCharge/ExtraCharge.php';
 

@@ -1,5 +1,5 @@
 <?php
-include_once './CliApp.php';
+include_once './src/CliApp.php';
 include_once 'TicketType/TicketType.php';
 include_once 'AgeCategory/AgeCategory.php';
 include_once 'Quantity.php';

@@ -1,7 +1,7 @@
 <?php
-include_once './Ticket/Ticket.php';
-include_once './Ticket/Price/Discount/Discount.php';
-include_once './Ticket/Price/ExtraCharge/ExtraCharge.php';
+include_once './src/Ticket/Ticket.php';
+include_once './src/Ticket/Price/Discount/Discount.php';
+include_once './src/Ticket/Price/ExtraCharge/ExtraCharge.php';
 
 /**
  * 料金計算処理の呼び出し
