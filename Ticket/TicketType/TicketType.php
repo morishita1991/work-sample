@@ -1,7 +1,7 @@
 <?php
 include_once './CliApp.php';
-include_once 'Normal.php';
-include_once 'Special.php';
+include_once 'NormalTicket.php';
+include_once 'SpecialTicket.php';
 
 
 class TicketType extends CliApp
@@ -9,8 +9,8 @@ class TicketType extends CliApp
     public int $type;
 
     public const LIST = [
-        Normal::KEY => Normal::LABEL,
-        Special::KEY => Special::LABEL,
+        NormalTicket::KEY => NormalTicket::LABEL,
+        SpecialTicket::KEY => SpecialTicket::LABEL,
     ];
 
     public function listen()

@@ -15,9 +15,14 @@ class Discount extends CliApp
         MondayWednesDayDiscount::KEY => MondayWednesDayDiscount::LABEL
     ];
 
+    private Ticket $ticket;
+
     public array $detail = [];
 
-    private int $amount;
+    public function __construct(Ticket $ticket)
+    {
+        $this->ticket = $ticket;
+    }
 
     public function listen()
     {
@@ -101,7 +106,7 @@ class Discount extends CliApp
         if ($result === 2) {
             return;
         }
-    } 
+    }
 
     /**
      * 割引種別の入力
@@ -120,6 +125,9 @@ class Discount extends CliApp
         $value = intval($input);
         if (!in_array($value, array_merge(array_keys(self::LIST), [0]), true)) {
             return $this->inputError('指定外の数字は入力しないでください。');
+        }
+        if ($value === BulkDiscount::KEY && !(new BulkDiscount($this, $this->ticket))->isOver10Tickets()) {
+            return $this->inputError('10人未満は「団体割引」を適用できません。');
         }
         return $this->inputSuccess($value);
     }

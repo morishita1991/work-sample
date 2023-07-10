@@ -23,13 +23,21 @@ class BulkDiscount extends Discount
      */
     public function applicable(): bool
     {
-        // 10人以上かどうか
+        return $this->isOver10Tickets() && ($this->discountDetail[self::KEY] ?? 0) === 1;
+    }
+
+    /**
+     * 10人以上かどうかを返す
+     * @return bool
+     */
+    public function isOver10Tickets(): bool
+    {
         $number = 0;
         foreach ($this->ticketDetail as $arr) {
             foreach ($arr as $key => $quantity) {
                 $number += $quantity;
             }
         }
-        return $number >= 10 && ($this->discountDetail[self::KEY] ?? 0) === 1;
+        return $number >= 10;
     }
 }

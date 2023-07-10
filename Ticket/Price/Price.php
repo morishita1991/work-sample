@@ -8,7 +8,7 @@ class Price extends CliApp {
 
     private const UNIT_PRICE = [
         // 通常
-        Normal::KEY => [
+        NormalTicket::KEY => [
             // 大人
             Adult::KEY => 1000,
             // 子供
@@ -17,7 +17,7 @@ class Price extends CliApp {
             Senior::KEY => 800
         ],
         // 特別
-        Special::KEY => [
+        SpecialTicket::KEY => [
             // 大人
             Adult::KEY => 600,
             // 子供
@@ -73,7 +73,7 @@ class Price extends CliApp {
         }
     }
 
-    public function Calculate()
+    public function confirm()
     {
         // 金額変更前合計金額
         $this->calcPreTotalAmount();

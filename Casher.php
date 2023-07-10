@@ -64,7 +64,7 @@ class Casher
         $ticket = new Ticket();
         $ticket->register($ticket);
         
-        $discount = new Discount();
+        $discount = new Discount($ticket);
         $discount->listen();
         
         $extraCharge = new ExtraCharge();
@@ -75,7 +75,7 @@ class Casher
         $extraCharge->confirm();
 
         $price = new Price($ticket, $discount, $extraCharge);
-        $price->Calculate();
+        $price->confirm();
         $price->listen();
     }
 }
