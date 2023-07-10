@@ -4,6 +4,8 @@ include_once './src/Ticket/Price/Discount/Discount.php';
 include_once './src/Ticket/Price/ExtraCharge/ExtraCharge.php';
 
 /**
+ * Unitテストの実行
+ * vendor/bin/phpunit test/ --do-not-cache-result
  * 
  * 要件
  * - 団体割引は1回の決済で扱うチケットのみを対象とする。
