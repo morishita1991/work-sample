@@ -19,6 +19,18 @@ class Discount extends CliApp
 
     public array $detail = [];
 
+    /**
+     * 入力値のバリデーション結果
+     * @var array{result:false|int,error:string}
+     */
+    public array $validResult;
+
+    /**
+     * 入力値のバリデーション結果(その2)
+     * @var array{result:false|int,error:string}
+     */
+    public array $validResultMore;
+
     public function __construct(Ticket $ticket)
     {
         $this->ticket = $ticket;
@@ -26,16 +38,14 @@ class Discount extends CliApp
 
     public function listen()
     {
-        [
-            'result' => $result,
-            'error' => $error
-        ] = $this->validate();
+        $this->validate();
 
-        if ($result === false) {
-            $this->line($error);
+        if ($this->validResult['result'] === false) {
+            $this->line($this->validResult['error']);
             $this->listen();
             return;
         }
+        $result = $this->validResult['result'];
         if ($result === 0) {
             return;
         }
@@ -90,20 +100,17 @@ class Discount extends CliApp
 
     private function listenMore()
     {
-        [
-            'result' => $result,
-            'error' => $error
-        ] = $this->validateMore();
+        $this->validateMore();
 
-        if ($result === false) {
-            $this->line($error);
+        if ($this->validResultMore['result'] === false) {
+            $this->line($this->validResultMore['error']);
             $this->listenMore();
             return;
         }
-        if ($result === 1) {
+        if ($this->validResultMore['result'] === 1) {
             $this->listen();
         }
-        if ($result === 2) {
+        if ($this->validResultMore['result'] === 2) {
             return;
         }
     }
@@ -111,25 +118,28 @@ class Discount extends CliApp
     /**
      * 割引種別の入力
      * 不正な値の場合は、エラーメッセージを返します。
-     * @return array{result:false|int,error:string}
+     * @return void
      */
-    private function validate()
+    public function validate()
     {
         $this->line('');
         $this->line('割引方法を入力してください。');
         $input = $this->ask($this->askMassage());
         $this->line('');
         if (!is_numeric($input)) {
-            return $this->inputError('半角数字で入力してください。');
+            $this->validResult = $this->inputError('半角数字で入力してください。');
+            return;
         }
         $value = intval($input);
         if (!in_array($value, array_merge(array_keys(self::LIST), [0]), true)) {
-            return $this->inputError('指定外の数字は入力しないでください。');
+            $this->validResult = $this->inputError('指定外の数字は入力しないでください。');
+            return;
         }
         if ($value === BulkDiscount::KEY && !(new BulkDiscount($this, $this->ticket))->isOver10Tickets()) {
-            return $this->inputError('10人未満は「団体割引」を適用できません。');
+            $this->validResult = $this->inputError('10人未満は「団体割引」を適用できません。');
+            return;
         }
-        return $this->inputSuccess($value);
+        $this->validResult = $this->inputSuccess($value);
     }
 
     private function askMassage()
@@ -147,19 +157,21 @@ class Discount extends CliApp
     /**
      * 再び割引種別の入力を行うかどうか
      * 不正な値の場合は、エラーメッセージを返します。
-     * @return array{result:false|int,error:string}
+     * @return void
      */
-    private function validateMore()
+    public function validateMore()
     {
         $input = $this->ask('他に割引は必要ですか？ はい「1」, いいえ「2」 : ');
         $this->line('');
         if (!is_numeric($input)) {
-            return $this->inputError('半角数字で入力してください。');
+            $this->validResultMore = $this->inputError('半角数字で入力してください。');
+            return;
         }
         $value = intval($input);
         if (!in_array($value, [1, 2], true)) {
-            return $this->inputError('指定外の数字は入力しないでください。');
+            $this->validResultMore = $this->inputError('指定外の数字は入力しないでください。');
+            return;
         }
-        return $this->inputSuccess($value);
+        $this->validResultMore = $this->inputSuccess($value);
     }
 }

@@ -20,36 +20,41 @@ class AgeCategory extends CliApp
         Senior::KEY => Senior::LABEL,
     ];
 
+    /**
+     * 入力値のバリデーション結果
+     * @var array{result:false|int,error:string}
+     */
+    public array $validResult;
+
     public function listen()
     {
-        [
-            'result' => $result,
-            'error' => $error
-        ] = $this->validate();
+        $this->validate();
 
-        if ($result === false) {
-            $this->line($error);
+        if ($this->validResult['result'] === false) {
+            $this->line($this->validResult['error']);
             $this->listen(); // もう一度
         } else {
-            $this->category = $result;
+            $this->category = $this->validResult['result'];
         }
     }
 
     /**
      * 年齢区分
      * 不正な値の場合は、エラーメッセージを返します。
-     * @return array{result:false|int,error:string}
+     * @return void
      */
-    private function validate()
+    public function validate()
     {
         $input = $this->ask('チケットの年齢区分を半角数字で入力してください。大人「1」, 子供「2」, シニア「3」 : ');
         if (!is_numeric($input)) {
-            return $this->inputError('半角数字で入力してください。');
+            $this->validResult = $this->inputError('半角数字で入力してください。');
+            return;
         }
         $value = intval($input);
         if (!in_array($value, [1, 2, 3], true)) {
-            return $this->inputError('指定外の数字は入力しないでください。');
+            $this->validResult = $this->inputError('指定外の数字は入力しないでください。');
+            return;
         }
-        return $this->inputSuccess($value);
+        $this->validResult = $this->inputSuccess($value);
     }
 }

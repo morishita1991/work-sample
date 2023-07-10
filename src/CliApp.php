@@ -36,19 +36,24 @@ abstract class CliApp
      */
     protected function line(string $message)
     {
+        if (isset($_SESSION['is_unittest'])) {
+            // テスト中は出力しない
+            return;
+        }
         echo escapeshellcmd($message) . "\n";
     }
 
     /**
      * 画面に文字を表示して、入力を受け付ける
-     *
      * @param string $message
      * @return string
      */
     protected function ask(string $message)
     {
-        // メッセージを表示し、「標準入力」の受け付け待ち。
-        // 前後のスペースなど、入力ミスと思われるものを除外（trim）してあげるのは優しさ。
+        if (isset($_SESSION['is_unittest'])) {
+            // テスト中は事前に指定した値を返す
+            return $_SESSION['unittest_ask_input'];
+        }
         $this->message($message);
         return trim(fgets(STDIN));
     }

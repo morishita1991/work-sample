@@ -1,6 +1,6 @@
 <?php
 
-class Senior extends AgeCategory
+class Senior
 {
     const KEY = 3;
     const LABEL = 'シニア';

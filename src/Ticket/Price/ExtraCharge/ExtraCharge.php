@@ -12,15 +12,19 @@ class ExtraCharge extends CliApp
 
     public array $detail = [];
 
+    /**
+     * 入力値のバリデーション結果
+     * @var array{result:false|int,error:string}
+     */
+    public array $validResult;
+
     public function listen()
     {
-        [
-            'result' => $result,
-            'error' => $error
-        ] = $this->validate();
+        $this->validate();
 
+        $result = $this->validResult['result'];
         if ($result === false) {
-            $this->line($error);
+            $this->line($this->validResult['error']);
             $this->listen();
             return;
         }
@@ -91,22 +95,24 @@ class ExtraCharge extends CliApp
     /**
      * 割増種別の入力
      * 不正な値の場合は、エラーメッセージを返します。
-     * @return array{result:false|int,error:string}
+     * @return void
      */
-    private function validate()
+    public function validate()
     {
         $this->line('');
         $this->line('割増方法を入力してください。');
         $input = $this->ask($this->askMassage());
         $this->line('');
         if (!is_numeric($input)) {
-            return $this->inputError('半角数字で入力してください。');
+            $this->validResult = $this->inputError('半角数字で入力してください。');
+            return;
         }
         $value = intval($input);
         if (!in_array($value, array_merge(array_keys(self::LIST), [0]), true)) {
-            return $this->inputError('指定外の数字は入力しないでください。');
+            $this->validResult = $this->inputError('指定外の数字は入力しないでください。');
+            return;
         }
-        return $this->inputSuccess($value);
+        $this->validResult = $this->inputSuccess($value);
     }
 
     private function askMassage()

@@ -12,7 +12,7 @@ class Ticket extends CliApp
 
     private $quantity;
 
-    public array $detail;
+    public array $detail = [];
 
     /**
      * チケットの登録：必要な情報を入力してもらう

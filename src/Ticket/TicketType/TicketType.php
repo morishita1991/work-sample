@@ -13,27 +13,29 @@ class TicketType extends CliApp
         SpecialTicket::KEY => SpecialTicket::LABEL,
     ];
 
+    /**
+     * 入力値のバリデーション結果
+     * @var array{result:false|int,error:string}
+     */
+    public array $validResult;
+
     public function listen()
     {
-        [
-            'result' => $result,
-            'error' => $error
-        ] = $this->validate();
-
-        if ($result === false) {
-            $this->line($error);
+        $this->validate();
+        if ($this->validResult['result'] === false) {
+            $this->line($this->validResult['error']);
             $this->listen(); // もう一度
         } else {
-            $this->type = $result;
+            $this->type = $this->validResult['result'];
         }
     }
 
     /**
      * チケットの種別
      * 不正な値の場合は、エラーメッセージを返します。
-     * @return array{result:false|int,error:string}
+     * @return void
      */
-    private function validate()
+    public function validate()
     {
         $labelList = [];
         foreach(self::LIST as $key => $label) {
@@ -41,12 +43,14 @@ class TicketType extends CliApp
         }
         $input = $this->ask('チケットの種別を半角数字で入力してください。' . implode(', ', $labelList) . ' : ');
         if (!is_numeric($input)) {
-            return $this->inputError('半角数字で入力してください。');
+            $this->validResult = $this->inputError('半角数字で入力してください。');
+            return;
         }
         $value = intval($input);
         if (!in_array($value, [1, 2], true)) {
-            return $this->inputError('指定外の数字は入力しないでください。');
+            $this->validResult = $this->inputError('指定外の数字は入力しないでください。');
+            return;
         }
-        return $this->inputSuccess($value);
+        $this->validResult = $this->inputSuccess($value);
     }
 }
