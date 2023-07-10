@@ -1,5 +1,6 @@
 <?php
 include_once 'Discount.php';
+include_once './src/Ticket/AgeCategory/Child.php';
 
 class BulkDiscount extends Discount
 {
@@ -7,6 +8,7 @@ class BulkDiscount extends Discount
     const LABEL = '団体割引';
     const DISCOUNT_RATE = 10; // 10%割引
     const DISCOUNT_VALUE = 0;
+    const CHILD_CONDITIONAL_VALUE = 0.5; // 子供は0.5人として換算する
 
     private array $discountDetail;
     private array $ticketDetail;
@@ -35,6 +37,10 @@ class BulkDiscount extends Discount
         $number = 0;
         foreach ($this->ticketDetail as $arr) {
             foreach ($arr as $key => $quantity) {
+                if ($key === Child::KEY) {
+                    $number += $quantity * self::CHILD_CONDITIONAL_VALUE;
+                    continue;
+                }
                 $number += $quantity;
             }
         }
