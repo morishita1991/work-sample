@@ -41,6 +41,7 @@ class TicketType extends CliApp
         foreach(self::LIST as $key => $label) {
             $labelList[] = $label . '「' . strval($key) . '」';
         }
+        $this->line('');
         $input = $this->ask('チケットの種別を半角数字で入力してください。' . implode(', ', $labelList) . ' : ');
         if (!is_numeric($input)) {
             $this->validResult = $this->inputError('半角数字で入力してください。');

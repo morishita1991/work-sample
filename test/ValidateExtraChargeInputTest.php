@@ -9,7 +9,7 @@ class ValidateExtraChargeInputTest extends TestCase
 {
     /**
      * 割増対象の入力値バリデーション
-     * --- 成功例: 入力値「'0'」
+     * --- 成功例: 入力値「'0'」-- 次へ進む
      */
     public function testValidateExtraChargeInput_Success01()
     {
@@ -24,7 +24,7 @@ class ValidateExtraChargeInputTest extends TestCase
 
     /**
      * 割増対象の入力値バリデーション
-     * --- 成功例: 入力値「'1'」
+     * --- 成功例: 入力値「'1'」-- 休日料金
      */
     public function testValidateExtraChargeInput_Success02()
     {

@@ -14,7 +14,7 @@ class ValidateDiscountInputTest extends TestCase
 {
     /**
      * 割引対象の入力値バリデーション
-     * --- 成功例: 入力値「'0'」
+     * --- 成功例: 入力値「'0'」-- 次へ進む
      */
     public function testValidateDiscountInput_Success01()
     {
@@ -76,7 +76,7 @@ class ValidateDiscountInputTest extends TestCase
 
     /**
      * 割引対象の入力値バリデーション
-     * --- 成功例: 入力値「'2'」
+     * --- 成功例: 入力値「'2'」-- 夕方料金
      */
     public function testValidateDiscountInput_Success04()
     {
@@ -92,7 +92,7 @@ class ValidateDiscountInputTest extends TestCase
 
     /**
      * 割引対象の入力値バリデーション
-     * --- 成功例: 入力値「'3'」
+     * --- 成功例: 入力値「'3'」-- 月水割引
      */
     public function testValidateDiscountInput_Success05()
     {

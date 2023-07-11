@@ -9,7 +9,7 @@ class ValidateAgeCategoryInputTest extends TestCase
 {
     /**
      * 年齢区分の入力値バリデーション
-     * --- 成功例: 入力値「'1'」
+     * --- 成功例: 入力値「'1'」-- 大人
      */
     public function testValidateAgeCategoryInput_Success01()
     {
@@ -24,7 +24,7 @@ class ValidateAgeCategoryInputTest extends TestCase
 
     /**
      * 年齢区分の入力値バリデーション
-     * --- 成功例: 入力値「'2'」
+     * --- 成功例: 入力値「'2'」-- 子供
      */
     public function testValidateAgeCategoryInput_Success02()
     {
@@ -39,7 +39,7 @@ class ValidateAgeCategoryInputTest extends TestCase
 
     /**
      * 年齢区分の入力値バリデーション
-     * --- 成功例: 入力値「'3'」
+     * --- 成功例: 入力値「'3'」-- シニア
      */
     public function testValidateAgeCategoryInput_Success03()
     {

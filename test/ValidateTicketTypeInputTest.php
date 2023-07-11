@@ -9,7 +9,7 @@ class ValidateTicketTypeInputTest extends TestCase
 {
     /**
      * チケット種別の入力値バリデーション
-     * --- 成功例: 入力値「'1'」
+     * --- 成功例: 入力値「'1'」-- 通常
      */
     public function testValidateTicketTypeInput_Success01()
     {
@@ -24,7 +24,7 @@ class ValidateTicketTypeInputTest extends TestCase
 
     /**
      * チケット種別の入力値バリデーション
-     * --- 成功例: 入力値「'2'」
+     * --- 成功例: 入力値「'2'」-- 特別
      */
     public function testValidateTicketTypeInput_Success02()
     {

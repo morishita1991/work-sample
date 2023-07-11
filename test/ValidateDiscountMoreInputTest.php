@@ -10,7 +10,7 @@ class ValidateDiscountMoreInputTest extends TestCase
 {
     /**
      * 割引対象の再入力バリデーション
-     * --- 成功例: 入力値「'1'」
+     * --- 成功例: 入力値「'1'」-- はい
      */
     public function testValidateDiscountMoreInput_Success01()
     {
@@ -26,7 +26,7 @@ class ValidateDiscountMoreInputTest extends TestCase
 
     /**
      * 割引対象の再入力バリデーション
-     * --- 成功例: 入力値「'2'」
+     * --- 成功例: 入力値「'2'」-- いいえ
      */
     public function testValidateDiscountMoreInput_Success02()
     {
