@@ -1,5 +1,7 @@
-### チケット料金計算プログラムの実行(推奨:Windows, ※macOSでの動作未確認)
-`php .\src\Casher.php`
+## チケット料金計算プログラム(推奨:Windows, ※macOSでの動作未確認)
+```
+php .\src\Casher.php
+```
 
 ## 要件
 - 団体割引は1回の決済で扱うチケットのみを対象とする。
@@ -74,10 +76,24 @@
 
 
 ## Unitテストの実行
-`vendor/bin/phpunit test/ --do-not-cache-result`
+```
+vendor/bin/phpunit test/ --do-not-cache-result
+```
 
+### PHPUnit実行結果
+```
+PHPUnit 10.2.4 by Sebastian Bergmann and contributors.
 
-### テスト結果（入力値バリデーション）
+Runtime:       PHP 8.2.4
+
+.......................................                           39 / 39 (100%)
+
+Time: 00:00.023, Memory: 6.00 MB
+
+OK (39 tests, 78 assertions)
+```
+
+### テストケース一覧（入力値バリデーション）
 
 | 項番 |          テスト対象         | 前提条件 |    操作    |         期待される挙動     | テスト結果 |
 | ---- | -------------------------- | -------- | -------- | -------------------------- | -- |
