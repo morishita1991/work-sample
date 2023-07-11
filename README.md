@@ -86,11 +86,11 @@ PHPUnit 10.2.4 by Sebastian Bergmann and contributors.
 
 Runtime:       PHP 8.2.4
 
-..........................................                        42 / 42 (100%)
+................................................                  48 / 48 (100%)
 
-Time: 00:00.026, Memory: 6.00 MB
+Time: 00:00.021, Memory: 8.00 MB
 
-OK (42 tests, 84 assertions)
+OK (48 tests, 96 assertions)
 ```
 
 ### テストケース一覧（入力値バリデーション）

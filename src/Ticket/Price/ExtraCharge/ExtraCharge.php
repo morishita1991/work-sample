@@ -18,6 +18,12 @@ class ExtraCharge extends CliApp
      */
     public array $validResult;
 
+    /**
+     * 入力値のバリデーション結果(その2)
+     * @var array{result:false|int,error:string}
+     */
+    public array $validResultMore;
+
     public function listen()
     {
         $this->validate();
@@ -74,13 +80,10 @@ class ExtraCharge extends CliApp
 
     private function listenMore()
     {
-        [
-            'result' => $result,
-            'error' => $error
-        ] = $this->validateMore();
-
+        $this->validateMore();
+        $result = $this->validResultMore['result'];
         if ($result === false) {
-            $this->line($error);
+            $this->line($this->validResultMore['error']);
             $this->listenMore();
             return;
         }
@@ -130,19 +133,21 @@ class ExtraCharge extends CliApp
     /**
      * 再び割増種別の入力を行うかどうか
      * 不正な値の場合は、エラーメッセージを返します。
-     * @return array{result:false|int,error:string}
+     * @return void
      */
-    private function validateMore()
+    public function validateMore()
     {
         $input = $this->ask('他に割増は必要ですか？ はい「1」, いいえ「2」 : ');
         $this->line('');
         if (!is_numeric($input)) {
-            return $this->inputError('半角数字で入力してください。');
+            $this->validResultMore = $this->inputError('半角数字で入力してください。');
+            return;
         }
         $value = intval($input);
         if (!in_array($value, [1, 2], true)) {
-            return $this->inputError('指定外の数字は入力しないでください。');
+            $this->validResultMore = $this->inputError('指定外の数字は入力しないでください。');
+            return;
         }
-        return $this->inputSuccess($value);
+        $this->validResultMore = $this->inputSuccess($value);
     }
 }
