@@ -75,12 +75,15 @@ php .\src\Casher.php
 -  決済が完了しました。
 
 
-## Unitテストの実行
+## テスト結果
+
+### PHPUnit実行結果
+
 ```
 vendor/bin/phpunit test/ --do-not-cache-result
 ```
 
-### PHPUnit実行結果
+#### 48 tests, 96 assertions
 ```
 PHPUnit 10.2.4 by Sebastian Bergmann and contributors.
 
